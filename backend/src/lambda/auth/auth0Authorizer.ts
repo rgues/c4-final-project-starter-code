@@ -14,7 +14,7 @@ const jwksUrl = 'https://dev-vokysbodacbx1c3n.us.auth0.com/.well-known/jwks.json
 
 export const handler = async (event): Promise<CustomAuthorizerResult> => {
   
-  logger.info('Authorizing a user', event.authorizationToken)
+  logger.info('Authorizing a user', {token: event.authorizationToken})
  
   try {
     const jwtToken = await verifyToken(event.authorizationToken)
@@ -62,7 +62,9 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
 
    const cert = await Axios.get(jwksUrl);
 
-  return verify(token, cert.data.keys[0]['x5c'][0], { algorithms: ['RS256'] }) as JwtPayload
+   logger.info('Certificat', {data : cert})
+
+  return verify(token, certToPEM(cert.data.keys[0]['x5c'][0]), { algorithms: ['RS256'] }) as JwtPayload
 }
 
 
@@ -77,5 +79,11 @@ function getToken(authHeader: string): string {
   const token = split[1]
 
   return token
+}
+
+export function certToPEM(cert) {
+  cert = cert.match(/.{1,64}/g).join('\n');
+  cert = `-----BEGIN CERTIFICATE-----\n${cert}\n-----END CERTIFICATE-----\n`;
+  return cert;
 }
 
