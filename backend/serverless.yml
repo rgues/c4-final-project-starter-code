@@ -103,8 +103,7 @@ functions:
           reqValidatorName: RequestBodyValidator
           request:
             schemas:
-              global-model:
-                schema: ${file(models/create-todo-model.json)}
+              application/json: ${file(models/create-todo-model.json)}
     iamRoleStatementsInherit: true
 
   # TODO: Configure this function
@@ -121,8 +120,7 @@ functions:
           reqValidatorName: RequestBodyValidator
           request:
             schemas:
-              global-model:
-                schema: ${file(models/update-todo-model.json)}
+              application/json: ${file(models/update-todo-model.json)}
     iamRoleStatementsInherit: true
 
   # TODO: Configure this function
