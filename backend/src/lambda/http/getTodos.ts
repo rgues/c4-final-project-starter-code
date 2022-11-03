@@ -27,15 +27,15 @@ export const handler = middy(
     }
   
     return {
-        statusCode: 404,
-        body: ''
+        statusCode: 200,
+        body: JSON.stringify({items : []})
     }
 
   } catch (err) {
     logger.error('Failed to get information')
 
     return {
-      statusCode: 40,
+      statusCode: 400,
       body: JSON.stringify({
         message : 'Failed to get informations'
       })
