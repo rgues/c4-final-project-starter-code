@@ -27,6 +27,8 @@ export const handler = middy(
 
     } catch (err) {
 
+      logger.info('Update todo failed', {error: err })
+
       return {
         statusCode: 400,
         body: JSON.stringify({

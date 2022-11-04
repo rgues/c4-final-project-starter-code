@@ -46,8 +46,13 @@ export class TodoAccess {
         userId,
         todoId
       },
-   UpdateExpression: "set name = :val1, dueDate = :val2, done = :val3",
+   UpdateExpression: "set #name = :val1, #dueDate = :val2, #done = :val3",
    ConditionExpression: "todoId = :todoId",
+   ExpressionAttributeNames: { 
+    '#name' : 'name',
+    '#dueDate' : 'dueDate',
+    '#done' : 'done'
+  },
    ExpressionAttributeValues: { 
     ':val1' : todoItemUpdate.name,
     ':val2' : todoItemUpdate.dueDate,
