@@ -53,6 +53,6 @@ export async function getUploadUrl(todoId: string, userId: string) {
     return s3.getSignedUrl('putObject', {
         Bucket: bucketName,
         Key: {todoId,userId},
-        Expires: urlExpiration
+        Expires: parseInt(urlExpiration,10)
     })
 }

@@ -5,7 +5,7 @@ import { createAttachmentPresignedUrl } from '../../helpers/todos';
 import { getUserId } from '../utils'
 import { createLogger } from '../../utils/logger'
 
-const logger = createLogger('CreateTodos')
+const logger = createLogger('generateUrl')
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -13,9 +13,10 @@ export const handler = middy(
     // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
 
     try {
-      logger.info('Generate url')
+      
       const userId = getUserId(event)
       const url =  createAttachmentPresignedUrl(todoId,userId)
+      logger.info('Generate url',url)
       return {
         statusCode: 200,
         body: JSON.stringify({
