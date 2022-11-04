@@ -49,10 +49,10 @@ export async function createAttachment(todoId: string, userId: string, event: an
     return newItem
 }
 
-export async function getUploadUrl(todoId: string) {
+export async function getUploadUrl(todoId: string, userId: string) {
     return s3.getSignedUrl('putObject', {
         Bucket: bucketName,
-        Key: todoId,
+        Key: {todoId,userId},
         Expires: urlExpiration
     })
 }
