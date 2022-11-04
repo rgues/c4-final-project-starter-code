@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
-import { updateTodo } from '../../helpers/todos'
+import { updateTodoData } from '../../helpers/todos'
 import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 import { getUserId } from '../utils'
 import { createLogger } from '../../utils/logger'
@@ -18,7 +18,7 @@ export const handler = middy(
 
       logger.info('Update todo item')
       const userId = getUserId(event)
-      await updateTodo(todoId, updatedTodo, userId) 
+      await updateTodoData(todoId, updatedTodo, userId) 
 
       return {
         statusCode: 201,

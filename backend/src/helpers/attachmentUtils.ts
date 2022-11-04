@@ -16,12 +16,13 @@ const bucketName = process.env.ATTACHMENT_S3_BUCKET
 const urlExpiration = process.env.SIGNED_URL_EXPIRATION
 
 // check if todoItem exist
-export async function todoExists(todoId: string) {
+export async function todoExists(todoId: string, userId: string) {
     const result = await docClient
         .get({
             TableName: todosTable,
             Key: {
-                todoId: todoId
+                todoId: todoId,
+                userId: userId
             }
         })
         .promise()
@@ -30,10 +31,12 @@ export async function todoExists(todoId: string) {
 }
 
 // create attachment 
-export async function createAttachment(todoId: string, event: any): Promise<TodoItem> {
+export async function createAttachment(todoId: string, userId: string, event: any): Promise<TodoItem> {
     const createdAt = new Date().toISOString()
     const newTodo = JSON.parse(event.body)
     const newItem = {
+        todoId,
+        userId,
         createdAt,
         ...newTodo,
         attachmentUrl: `https://${bucketName}.s3.amazonaws.com/${todoId}`

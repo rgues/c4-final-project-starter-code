@@ -1,5 +1,6 @@
 import * as AWS from 'aws-sdk'
 import { TodoItem } from '../models/TodoItem'
+import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 
 // TODO: Implement the dataLayer logic
 export class TodoAccess {
@@ -37,31 +38,28 @@ export class TodoAccess {
   }
 
   // Update an item
-  async updateTodo(userId: string, todoId: string, todoItemUpdate: TodoItem): Promise<TodoItem> {
+  async updateTodo(userId: string, todoId: string, todoItemUpdate: UpdateTodoRequest): Promise<string> {
 
-    const result = await this.docClient.query({
+    await this.docClient.update({
       TableName: this.todoTable,
-      KeyConditionExpression: 'todoId = :todoId',
-      ExpressionAttributeValues: {
-        ':todoId': todoId
+      Key: {
+        userId,
+        todoId
       },
-      ScanIndexForward: false
+      ExpressionAttributeNames: { 
+        name : ':val1',
+        dueDate : ':val2',
+        done : ':val3' 
+     },
+     ExpressionAttributeValues: { 
+      ':val1' : todoItemUpdate.name,
+      ':val2' : todoItemUpdate.dueDate,
+      ':val3' : todoItemUpdate.done  
+   },
+      ReturnValues: "ALL_NEW"
     }).promise()
 
-    const userItem = result.Items[0];
-
-    const newItem: TodoItem = {
-      ...userItem,
-      ...todoItemUpdate,
-      userId
-    }
-
-    await this.docClient.put({
-      TableName: this.todoTable,
-      Item: newItem
-    }).promise()
-
-    return newItem
+    return ''
   }
 
   // Delete an item

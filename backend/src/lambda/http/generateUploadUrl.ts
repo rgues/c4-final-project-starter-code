@@ -2,6 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import { createAttachmentPresignedUrl } from '../../helpers/todos';
+import { getUserId } from '../utils'
 import { createLogger } from '../../utils/logger'
 
 const logger = createLogger('CreateTodos')
@@ -13,7 +14,8 @@ export const handler = middy(
 
     try {
       logger.info('Generate url')
-      const url =  createAttachmentPresignedUrl(todoId)
+      const userId = getUserId(event)
+      const url =  createAttachmentPresignedUrl(todoId,userId)
       return {
         statusCode: 200,
         body: JSON.stringify({
@@ -21,7 +23,7 @@ export const handler = middy(
         })
       };
     } catch (err) {
-      logger.error('Failed to generate url')
+      logger.error('Failed to generate url',err)
       return {
         statusCode: 400,
         body: JSON.stringify({

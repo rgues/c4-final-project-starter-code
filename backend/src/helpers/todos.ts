@@ -31,34 +31,22 @@ export async function createTodo(
 
 }
 
-export async function updateTodo(
+export async function updateTodoData(
   todoId: string,
   updateTodoRequest: UpdateTodoRequest,
   userId: string
-): Promise<TodoItem> {
+): Promise<string> {
 
-  const newItem = {
-    name: updateTodoRequest.name,
-    dueDate: updateTodoRequest.dueDate,
-    done: updateTodoRequest.done
-  }
-
-  return await todosAccess.updateTodo(userId, todoId,
-    {
-      userId,
-      todoId,
-      ...newItem,
-      createdAt: new Date().toISOString()
-    });
+  return await todosAccess.updateTodo(userId,todoId,updateTodoRequest)
 }
 
 export async function deleteTodo(todoId: string, userId: string) {
   return await todosAccess.deleteTodo(todoId, userId);
 }
 
-export async function createAttachmentPresignedUrl(todoId: string) {
+export async function createAttachmentPresignedUrl(todoId: string, userId: string) {
 
-  const validTodoId = await todoExists(todoId)
+  const validTodoId = await todoExists(todoId,userId)
 
   if (!validTodoId) {
     return {
