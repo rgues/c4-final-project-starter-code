@@ -44,22 +44,6 @@ provider:
       Resource: "*"
     - Effect: Allow
       Action:
-        - dynamodb:GetItem
-        - dynamodb:Query
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}     
-    - Effect: Allow
-      Action:
-        - dynamodb:PutItem
-      Resource: !GetAtt TodosTable.Arn
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-      Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TODOS_CREATED_AT_INDEX}  
-    - Effect: Allow
-      Action:
         - s3:PutObject
         - s3:GetObject
       Resource: "arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*"  
@@ -86,7 +70,16 @@ functions:
             name: Auth 
           reqValidatorName: RequestBodyValidator
     iamRoleStatementsInherit: true
-     
+    iamRoleStatements :
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE} 
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TODOS_CREATED_AT_INDEX}       
+
   # TODO: Configure this function - 
   # Provide iamRoleStatements property. Decide the Actions and AWS Resource. 
   # To refer to an AWS resource defined in the "Resources" section, you can use "Resource: !GetAtt <resource-name>.Arn"
@@ -105,6 +98,12 @@ functions:
             schemas:
               application/json: ${file(models/create-todo-model.json)}
     iamRoleStatementsInherit: true
+    iamRoleStatements :
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: !GetAtt TodosTable.Arn
+     
 
   # TODO: Configure this function
   # Provide property for setting up CORS, Authorizer, iamRoleStatements, and request schemas
@@ -122,6 +121,12 @@ functions:
             schemas:
               application/json: ${file(models/update-todo-model.json)}
     iamRoleStatementsInherit: true
+    iamRoleStatements :
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE} 
+     
 
   # TODO: Configure this function
   # Provide property for setting up CORS, Authorizer, iamRoleStatements
@@ -136,6 +141,12 @@ functions:
             name: Auth
           reqValidatorName: RequestBodyValidator  
     iamRoleStatementsInherit: true
+    iamRoleStatements :
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE} 
+     
     
   # TODO: Configure this function
   # Provide property for setting up CORS, Authorizer, iamRoleStatements
@@ -149,8 +160,18 @@ functions:
           authorizer: 
             name: Auth 
           reqValidatorName: RequestBodyValidator  
-    iamRoleStatementsInherit: true  
-    
+    iamRoleStatementsInherit: true
+    iamRoleStatements :
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE} 
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TODOS_CREATED_AT_INDEX}       
+
 resources:
   Resources:
     # Add necessary AWS resources. You will need at least the following AWS resources
