@@ -55,5 +55,5 @@ export async function createAttachmentPresignedUrl(todoId: string, userId: strin
     }
   }
 
- return getUploadUrl(todoId,userId)
+ return getUploadUrl(todoId)
 }
