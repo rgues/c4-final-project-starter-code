@@ -5,11 +5,13 @@
   "properties": {
     "name": {
       "type": "string",
-      "pattern": "^[\\s0-9a-zA-Z-_.]+$"
+      "pattern": "^[\\s0-9a-zA-Z-_.]+$",
+      "minLength": 1,
+      "maxLength": 150
     },
     "dueDate": {
       "type": "string",
-      "pattern": "^yyyy-mm-dd$"
+      "pattern": "^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$"
     }
   },
   "required": [
