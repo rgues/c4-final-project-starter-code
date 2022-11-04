@@ -68,7 +68,8 @@ export class TodoAccess {
   async deleteTodo(todoId: string, userId: string): Promise<string> {
 
     const key = {
-      todoId: todoId
+      todoId: todoId,
+      userId: userId
     };
 
     await this.docClient.delete({
@@ -76,6 +77,6 @@ export class TodoAccess {
       Key: key
     }).promise()
 
-    return userId;
+    return '';
   }
 }
