@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk'
-import { TodoItem } from '../models/TodoItem'
-import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
+import { TodoItem } from '../../models/TodoItem'
+import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 
 // TODO: Implement the dataLayer logic
 export class TodoAccess {
@@ -46,16 +46,14 @@ export class TodoAccess {
         userId,
         todoId
       },
-      ExpressionAttributeNames: { 
-        name : ':val1',
-        dueDate : ':val2',
-        done : ':val3' 
-     },
-     ExpressionAttributeValues: { 
-      ':val1' : todoItemUpdate.name,
-      ':val2' : todoItemUpdate.dueDate,
-      ':val3' : todoItemUpdate.done  
-   },
+   UpdateExpression: "set name = :val1, dueDate = :val2, done = :val3",
+   ConditionExpression: "todoId = :todoId",
+   ExpressionAttributeValues: { 
+    ':val1' : todoItemUpdate.name,
+    ':val2' : todoItemUpdate.dueDate,
+    ':val3' : todoItemUpdate.done,
+    ':todoId' : todoId  
+  },
       ReturnValues: "ALL_NEW"
     }).promise()
 
@@ -77,4 +75,20 @@ export class TodoAccess {
 
     return '';
   }
+
+
+// check if todoItem exist
+ async  todoExists(todoId: string, userId: string) {
+  const result = await this.docClient
+      .get({
+          TableName: this.todoTable,
+          Key: {
+              todoId: todoId,
+              userId: userId
+          }
+      })
+      .promise()
+  console.log('Get todo: ', result)
+  return !!result.Item
+}
 }

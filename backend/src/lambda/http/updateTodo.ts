@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
-import { updateTodoData } from '../../helpers/todos'
+import { updateTodoData } from '../../helpers/businessLogic/todos'
 import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 import { getUserId } from '../utils'
 import { createLogger } from '../../utils/logger'
@@ -16,7 +16,7 @@ export const handler = middy(
 
     try {
 
-      logger.info('Update todo item')
+      logger.info('Update todo item', {data: updatedTodo })
       const userId = getUserId(event)
       await updateTodoData(todoId, updatedTodo, userId) 
 

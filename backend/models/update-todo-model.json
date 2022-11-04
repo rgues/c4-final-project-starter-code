@@ -4,10 +4,12 @@
   "type": "object",
   "properties": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[\\s0-9a-zA-Z-_.]+$"
     },
     "dueDate": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^yyyy-mm-dd$"
     },
     "done": {
       "type": "boolean"

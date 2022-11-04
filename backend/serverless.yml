@@ -68,7 +68,6 @@ functions:
           cors: true
           authorizer: 
             name: Auth 
-          reqValidatorName: RequestBodyValidator
     iamRoleStatementsInherit: true
     iamRoleStatements :
       - Effect: Allow
@@ -93,9 +92,8 @@ functions:
           cors: true
           authorizer: 
             name: Auth
-          reqValidatorName: RequestBodyValidator
           request:
-            schemas:
+            schema:
               application/json: ${file(models/create-todo-model.json)}
     iamRoleStatementsInherit: true
     iamRoleStatements :
@@ -116,9 +114,8 @@ functions:
           cors: true
           authorizer: 
             name: Auth 
-          reqValidatorName: RequestBodyValidator
           request:
-            schemas:
+            schema:
               application/json: ${file(models/update-todo-model.json)}
     iamRoleStatementsInherit: true
     iamRoleStatements :
@@ -138,8 +135,7 @@ functions:
           path: todos/{todoId}
           cors: true
           authorizer: 
-            name: Auth
-          reqValidatorName: RequestBodyValidator  
+            name: Auth 
     iamRoleStatementsInherit: true
     iamRoleStatements :
       - Effect: Allow
@@ -159,7 +155,6 @@ functions:
           cors: true
           authorizer: 
             name: Auth 
-          reqValidatorName: RequestBodyValidator  
     iamRoleStatementsInherit: true
     iamRoleStatements :
       - Effect: Allow
@@ -286,12 +281,4 @@ resources:
       Properties:
         DisplayName: Image bucket topic
         TopicName: ${self:custom.topicName}
-
-    RequestBodyValidator:
-      Type: AWS::ApiGateway::RequestValidator
-      Properties:
-        Name: 'request-body-validator'
-        RestApiId:
-          Ref: ApiGatewayRestApi
-        ValidateRequestBody: true
-        ValidateRequestParameters: false    
+  
