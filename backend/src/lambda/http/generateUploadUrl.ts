@@ -15,8 +15,8 @@ export const handler = middy(
     try {
       
       const userId = getUserId(event)
-      const url =  createAttachmentPresignedUrl(todoId,userId)
-      logger.info('Generate url',url)
+      const url = await createAttachmentPresignedUrl(todoId,userId)
+      logger.info('Generate url',{url:url})
       return {
         statusCode: 200,
         body: JSON.stringify({
